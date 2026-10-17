@@ -1,20 +1,21 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#080b10"><title>The Door Is Still There — Visual Upgrade 2</title>
+<meta name="theme-color" content="#080b10"><title>The Door Is Still There — Cinematic Visual Upgrade</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080b10;color:#eee;font-family:system-ui,-apple-system,sans-serif;touch-action:none}canvas{display:block}#hud{position:fixed;inset:0;z-index:2;pointer-events:none;text-shadow:0 2px 12px #000}#top{position:absolute;top:calc(12px + env(safe-area-inset-top));left:14px;right:14px;display:flex;justify-content:space-between;font-size:11px;color:#c6ced7;letter-spacing:.12em}#objective{max-width:48%;text-align:right;letter-spacing:0}#cross{position:absolute;left:50%;top:50%;width:7px;height:7px;border:1px solid #eee;border-radius:50%;transform:translate(-50%,-50%)}#hint{position:absolute;top:calc(50% + 18px);left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:.15em;white-space:nowrap}#msg{position:absolute;bottom:22%;left:7%;right:7%;text-align:center;line-height:1.6;font-size:14px;opacity:0;transition:opacity .3s;background:#080b10aa;padding:12px}#msg.on{opacity:1}#controls{position:absolute;bottom:calc(15px + env(safe-area-inset-bottom));left:14px;right:14px;display:flex;justify-content:space-between;align-items:end}#joy{width:116px;height:116px;border:1px solid #ffffff40;background:#ffffff0a;border-radius:50%;position:relative;pointer-events:auto}#knob{position:absolute;width:42px;height:42px;left:36px;top:36px;border-radius:50%;background:#dce6f022;border:1px solid #ffffff70}button{pointer-events:auto;color:#fff;background:#101721d9;border:1px solid #ffffff50;padding:15px 18px;letter-spacing:.12em;font-size:11px}#start,#note{position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse,#202a36f5,#05070bf7)}.card{width:min(100%,510px);padding:clamp(22px,5vw,38px);border:1px solid #ffffff25;background:#05080dcc;box-shadow:0 20px 70px #0009}h1{font-size:clamp(30px,8vw,48px);line-height:1.03;letter-spacing:.07em;font-weight:500;margin:14px 0 20px}.eyebrow{font-size:10px;letter-spacing:.22em;color:#a9b8c9;text-transform:uppercase}.copy{font-size:14px;line-height:1.7;color:#c3ccd6}.rule{height:1px;background:#ffffff25;margin:20px 0}.primary{width:100%;margin-top:22px}.small{font-size:11px;line-height:1.6;color:#8e9aaa;margin-top:12px}#note{display:none;background:#03050bea}#noteText{font:20px/1.65 Georgia,serif;color:#e7e0d3;white-space:pre-line}@media(pointer:fine){#controls{display:none}#msg{bottom:12%}}
 </style></head><body>
 <div id="hud"><div id="top"><div><div class="eyebrow">A psychological mystery</div><div id="chapter">CHAPTER 01 · THE HOUSE</div></div><div id="objective">Find out why the photograph keeps changing.</div></div><div id="cross"></div><div id="hint">DRAG TO LOOK</div><div id="msg"></div><div id="controls"><div id="joy"><div id="knob"></div></div><button id="examine">EXAMINE</button></div></div>
-<div id="start"><div class="card"><div class="eyebrow">Playable prototype · 01</div><h1>THE DOOR<br>IS STILL THERE</h1><div class="copy">You wake in a house you don't remember. The rooms seem ordinary. The photographs do not.</div><div class="rule"></div><div class="copy">Explore slowly. Find the photograph. Something in this house remembers you.</div><button class="primary" id="enter">ENTER THE HOUSE</button><div class="small">Free browser prototype · iPhone and desktop<br>Internet connection required to load the 3D engine.</div></div></div>
+<div id="start"><div class="card"><div class="eyebrow">Cinematic visual upgrade · 03</div><h1>THE DOOR<br>IS STILL THERE</h1><div class="copy">You wake in a house you don't remember. The rooms seem ordinary. The photographs do not.</div><div class="rule"></div><div class="copy">Explore slowly. Find the photograph. Something in this house remembers you.</div><button class="primary" id="enter">ENTER THE HOUSE</button><div class="small">Cinematic browser build · iPhone and desktop<br>Internet connection required for the 3D engine and optional photoreal furniture assets.</div></div></div>
 <div id="note"><div class="card"><div class="eyebrow" id="noteTitle">MEMORY FRAGMENT</div><div id="noteText"></div><button class="primary" id="close">CLOSE</button></div></div>
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/GLTFLoader.js"></script>
 <script>
 (()=>{const $=id=>document.getElementById(id);if(!window.THREE){$('objective').textContent='3D engine failed to load. Check internet and reload.';return}
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x101720);scene.fog=new THREE.FogExp2(0x101720,.035);
 const camera=new THREE.PerspectiveCamera(74,innerWidth/innerHeight,.1,80);camera.rotation.order='YXZ';
-const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.35));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.0;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.domElement.style.cssText='position:fixed;inset:0;z-index:0';document.body.prepend(renderer.domElement);
-const world=new THREE.Group();scene.add(world);scene.add(new THREE.HemisphereLight(0xc1d2e2,0x29221d,0.85));const moon=new THREE.DirectionalLight(0xc8d9f4,2.0);moon.position.set(-4,7,3);moon.castShadow=true;moon.shadow.mapSize.set(768,768);moon.shadow.camera.left=-8;moon.shadow.camera.right=8;moon.shadow.camera.top=8;moon.shadow.camera.bottom=-8;scene.add(moon);const lamp=new THREE.PointLight(0xffc887,25,12,2);lamp.position.set(2.5,2.4,-2.5);lamp.castShadow=true;lamp.shadow.mapSize.set(512,512);scene.add(lamp);
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.35));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.domElement.style.cssText='position:fixed;inset:0;z-index:0';document.body.prepend(renderer.domElement);
+const world=new THREE.Group();scene.add(world);scene.add(new THREE.HemisphereLight(0xc1d2e2,0x29221d,0.85));const moon=new THREE.DirectionalLight(0xc8d9f4,2.0);moon.position.set(-4,7,3);moon.castShadow=true;moon.shadow.mapSize.set(1024,1024);moon.shadow.camera.left=-8;moon.shadow.camera.right=8;moon.shadow.camera.top=8;moon.shadow.camera.bottom=-8;scene.add(moon);const lamp=new THREE.PointLight(0xffc887,25,12,2);lamp.position.set(2.5,2.4,-2.5);lamp.castShadow=true;lamp.shadow.mapSize.set(512,512);scene.add(lamp);
 
 const mat=(c,r=.9,m=0)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});
 // Procedural, locally generated textures: no extra image downloads needed.
@@ -33,7 +34,7 @@ function makeTexture(kind, base, accent, count=1800) {
 const woodTex=makeTexture('wood','#49372b','#c0a184');
 const plasterTex=makeTexture('plaster','#777a78','#d0c8b9');
 const floorTex=makeTexture('wood','#3d352f','#9b8065');floorTex.repeat.set(2,5);
-const wallTextured=new THREE.MeshStandardMaterial({color:0xffffff,map:plasterTex,roughness:1});
+const wallTextured=new THREE.MeshStandardMaterial({color:0xffffff,map:plasterTex,roughness:.96});
 const floorTextured=new THREE.MeshStandardMaterial({color:0xffffff,map:floorTex,roughness:.92});
 const woodTextured=new THREE.MeshStandardMaterial({color:0xffffff,map:woodTex,roughness:.82});
 const wall=wallTextured,floor=floorTextured,ceil=mat(0x34383c),trim=mat(0x24272a),wood=woodTextured,doorMat=mat(0x30251f),frame=mat(0x15191c),glass=mat(0x1c2c3d,.2,.15);
@@ -43,6 +44,16 @@ box(world,-1.95,H/2,-7.5,1.9,H,.16,wall);box(world,2,H/2,-7.5,1.8,H,.16,wall);bo
 for(let z=-10.8;z<2;z+=2.7){box(world,-2.78,.13,z,.045,.22,1.8,trim);box(world,2.78,.13,z,.045,.22,1.8,trim)}
 function win(x,y,z,rot){let g=new THREE.Group();g.position.set(x,y,z);g.rotation.y=rot;world.add(g);box(g,0,0,0,1.35,1.25,.08,frame);box(g,0,0,.05,1.15,1.05,.04,glass);box(g,0,0,.09,.045,1.08,.05,trim);box(g,0,0,.09,1.18,.045,.05,trim)}win(-2.79,2.05,-3.2,Math.PI/2);win(2.79,2.05,-9.2,-Math.PI/2);
 box(world,0,1.25,1.89,1.15,2.5,.12,doorMat,'front door');box(world,.4,1.25,1.81,.06,.06,.06,mat(0xb38a4c,.4,.6));
+// Raised-panel woodwork and detailed door casing.
+const casing=mat(0x292522,.8),doorPanel=mat(0x3c2b23,.88),agedBrass=mat(0x98774c,.35,.65);
+for(const x of [-.43,.43]){box(world,x,1.27,1.805,.045,2.58,.08,casing,'door casing');}
+box(world,0,2.54,1.805,1.0,.09,.08,casing,'door header');
+for(const y of [.65,1.75])for(const x of [-.29,.29]){
+  box(world,x,y,1.818,.36,.72,.035,doorPanel,'raised door panel');
+  box(world,x,y,1.838,.29,.64,.012,doorMat,'recessed door panel');
+}
+const knob=new THREE.Mesh(new THREE.SphereGeometry(.055,16,12),agedBrass);knob.position.set(.39,1.22,1.77);world.add(knob);
+
 const idoor=new THREE.Group();idoor.position.set(0,0,-10.82);world.add(idoor);box(idoor,0,1.4,0,1.35,2.8,.12,frame);const leaf=box(idoor,0,1.4,-.075,1.12,2.62,.08,doorMat);box(idoor,.38,1.35,-.13,.055,.055,.055,mat(0xb4a17b,.3,.5));
 box(world,1.25,.9,-4.4,1.5,.12,.8,wood);for(let x of [.62,1.88])for(let z of [-4.7,-4.1])box(world,x,.43,z,.09,.85,.09,wood);
 const photoG=new THREE.Group();photoG.position.set(1.25,1.08,-4.4);photoG.rotation.x=-.16;world.add(photoG);box(photoG,0,0,0,.62,.72,.055,frame);box(photoG,0,0,.032,.5,.6,.018,mat(0xc1b9a7));for(let x of [-.11,.11])box(photoG,x,-.06,.046,.13,.28,.015,mat(0x384047));
@@ -51,11 +62,34 @@ const drawG=new THREE.Group();drawG.position.set(-2.79,1.65,-6.1);drawG.rotation
 const rugMat=mat(0x343b40,1),fabricMat=mat(0x45413d,1),brass=mat(0x8c7047,.38,.65),shadeMat=new THREE.MeshStandardMaterial({color:0xd4c4a5,roughness:.95,emissive:0x2b2113});
 box(world,.05,.012,-4.9,2.35,.025,1.65,rugMat,'worn rug');
 for(let x=-1.05;x<=1.05;x+=.18)box(world,x,.028,-5.68,.012,.008,.12,mat(0x8d8170));
- // Sofa against the wall, with individual cushions and wooden feet.
-box(world,-1.75,.48,-5.25,1.25,.52,.58,fabricMat,'sofa base');
-box(world,-1.75,.91,-5.53,1.35,.55,.2,fabricMat,'sofa back');
-for(const x of [-2.18,-1.75,-1.32])box(world,x,.72,-5.25,.38,.14,.48,mat(0x514b45),'sofa cushion');
-for(const x of [-2.23,-1.27])for(const z of [-5.47,-5.02])box(world,x,.16,z,.07,.28,.07,wood,'sofa foot');
+ // Real PBR furniture models (CC0 / Poly Haven via Innerscene's GLB library).
+// If the remote model is unavailable, a locally-built fallback keeps the room playable.
+const fallbackSofa=new THREE.Group();world.add(fallbackSofa);
+box(fallbackSofa,-1.75,.48,-5.25,1.25,.52,.58,fabricMat,'sofa fallback base');
+box(fallbackSofa,-1.75,.91,-5.53,1.35,.55,.2,fabricMat,'sofa fallback back');
+for(const x of [-2.18,-1.75,-1.32])box(fallbackSofa,x,.72,-5.25,.38,.14,.48,mat(0x514b45),'sofa fallback cushion');
+for(const x of [-2.23,-1.27])for(const z of [-5.47,-5.02])box(fallbackSofa,x,.16,z,.07,.28,.07,wood,'sofa fallback foot');
+const fallbackChair=new THREE.Group();fallbackChair.position.set(-2.0,0,-3.35);world.add(fallbackChair);
+box(fallbackChair,0,.42,0,.72,.22,.7,wood,'chair fallback seat');
+box(fallbackChair,0,.85,-.28,.72,.8,.12,wood,'chair fallback back');
+for(const x of [-.29,.29])for(const z of [-.27,.27])box(fallbackChair,x,.2,z,.07,.4,.07,wood,'chair fallback leg');
+function loadRealModel(url,position,scale,rotationY,fallbackGroup){
+  if(!THREE.GLTFLoader)return;
+  const loader=new THREE.GLTFLoader();
+  loader.load(url,gltf=>{
+    const model=gltf.scene;
+    model.position.set(position[0],position[1],position[2]);
+    model.scale.setScalar(scale);
+    model.rotation.y=rotationY||0;
+    model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;if(o.material){o.material.envMapIntensity=1.0;}}});
+    world.add(model);
+    if(fallbackGroup)fallbackGroup.visible=false;
+  },undefined,err=>console.warn('Optional furniture asset did not load; using built-in fallback.',err));
+}
+// Photorealistic models include embedded PBR color/roughness/normal maps.
+// They are CC0 and optional, so the game still loads if the host is unavailable.
+loadRealModel('https://www.innerscene.com/api/library/tufted-leather-sofa-85cd627c/download',[-1.75,0,-5.45],.95,0,fallbackSofa);
+loadRealModel('https://www.innerscene.com/api/library/victorian-armchair-f000c44f/download',[-2.0,0,-3.35],.9,Math.PI,fallbackChair);
  // A floor lamp creates a warm pool of light and a readable silhouette.
 box(world,2.25,.08,-3.05,.25,.12,.25,brass,'lamp base');
 box(world,2.25,1.05,-3.05,.045,1.9,.045,brass,'lamp stem');
@@ -80,7 +114,7 @@ renderer.domElement.addEventListener('pointermove',e=>{if(e.pointerId!==dragId)r
 document.addEventListener('mousemove',e=>{if(started&&document.pointerLockElement===renderer.domElement){player.yaw-=e.movementX*.002;player.pitch=Math.max(-1.25,Math.min(1.25,player.pitch-e.movementY*.002))}});
 $('joy').addEventListener('pointerdown',e=>{if(!started)return;e.preventDefault();joyId=e.pointerId;$('joy').setPointerCapture(e.pointerId);joyMove(e)});function joyMove(e){if(e.pointerId!==joyId)return;let r=$('joy').getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),m=Math.hypot(dx,dy),max=34;if(m>max){dx*=max/m;dy*=max/m}mx=dx/max;my=dy/max;$('knob').style.transform=`translate(${dx}px,${dy}px)`}$('joy').addEventListener('pointermove',joyMove);function joyEnd(e){if(e.pointerId===joyId){joyId=null;mx=my=0;$('knob').style.transform='translate(0,0)'}}$('joy').addEventListener('pointerup',joyEnd);$('joy').addEventListener('pointercancel',joyEnd);
 addEventListener('keydown',e=>{keys[e.code]=true;if(e.code==='KeyE'||e.code==='Space')interact()});addEventListener('keyup',e=>keys[e.code]=false);
-function move(dt){let f=-my,s=mx;if(keys.KeyW||keys.ArrowUp)f-=1;if(keys.KeyS||keys.ArrowDown)f+=1;if(keys.KeyA||keys.ArrowLeft)s-=1;if(keys.KeyD||keys.ArrowRight)s+=1;let mag=Math.hypot(f,s);if(mag>1){f/=mag;s/=mag}let speed=2.4*dt,nx=player.x+(-Math.sin(player.yaw)*f+Math.cos(player.yaw)*s)*speed,nz=player.z+(-Math.cos(player.yaw)*f-Math.sin(player.yaw)*s)*speed;nx=Math.max(-2.48,Math.min(2.48,nx));nz=Math.max(-10.35,Math.min(1.35,nz));if(player.z>-7.48&&nz<=-7.48&&Math.abs(nx)>1.05)nz=player.z;if(player.z<=-7.48&&nz>-7.48&&Math.abs(nx)>1.05)nz=player.z;if(!doorOpen&&nz<-10.1&&Math.abs(nx)<.7)nz=player.z;player.x=nx;player.z=nz;camera.position.set(nx,player.y,nz);camera.rotation.set(player.pitch,player.yaw,0,'YXZ')}
+function move(dt){let f=-my,s=mx;if(keys.KeyW||keys.ArrowUp)f-=1;if(keys.KeyS||keys.ArrowDown)f+=1;if(keys.KeyA||keys.ArrowLeft)s-=1;if(keys.KeyD||keys.ArrowRight)s+=1;let mag=Math.hypot(f,s);if(mag>1){f/=mag;s/=mag}let speed=2.4*dt,nx=player.x+(-Math.sin(player.yaw)*f+Math.cos(player.yaw)*s)*speed,nz=player.z+(-Math.cos(player.yaw)*f-Math.sin(player.yaw)*s)*speed;nx=Math.max(-2.48,Math.min(2.48,nx));nz=Math.max(-10.35,Math.min(1.35,nz));if(player.z>-7.48&&nz<=-7.48&&Math.abs(nx)>1.05)nz=player.z;if(player.z<=-7.48&&nz>-7.48&&Math.abs(nx)>1.05)nz=player.z;if(!doorOpen&&nz<-10.1&&Math.abs(nx)<.7)nz=player.z;player.x=nx;player.z=nz;const walking=Math.min(1,Math.hypot(f,s));camera.position.set(nx,player.y+Math.sin(elapsed*8.2)*.018*walking,nz);camera.rotation.set(player.pitch,player.yaw,0,'YXZ')}
 function animate(now){requestAnimationFrame(animate);let dt=Math.min((now-last)/1000,.04);last=now;elapsed+=dt;if(started&&!noteOpen)move(dt);lamp.intensity=22+Math.sin(elapsed*1.7)*.55;dust.position.y=Math.sin(elapsed*.18)*.025;if(glitch){let p=Math.max(0,Math.sin(elapsed*(glitch===1?1.8:glitch===2?3.2:5.5)))*.018*glitch;renderer.domElement.style.filter=`contrast(${1+p*2}) saturate(${1-p})`;if(glitch>=2)scene.fog.density=.035+Math.max(0,Math.sin(elapsed*3.1))*.006*glitch}let t=target();$('hint').textContent=t?'TAP EXAMINE':'DRAG TO LOOK';$('hint').style.opacity=started&&!noteOpen?(t?'1':'.6'):'0';renderer.render(scene,camera)}requestAnimationFrame(animate);
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});document.addEventListener('visibilitychange',()=>{if(document.hidden){mx=my=0;dragId=null}})
 })();
