@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#080b10"><title>The Door Is Still There</title>
+<meta name="theme-color" content="#080b10"><title>The Door Is Still There — Visual Upgrade 2</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080b10;color:#eee;font-family:system-ui,-apple-system,sans-serif;touch-action:none}canvas{display:block}#hud{position:fixed;inset:0;z-index:2;pointer-events:none;text-shadow:0 2px 12px #000}#top{position:absolute;top:calc(12px + env(safe-area-inset-top));left:14px;right:14px;display:flex;justify-content:space-between;font-size:11px;color:#c6ced7;letter-spacing:.12em}#objective{max-width:48%;text-align:right;letter-spacing:0}#cross{position:absolute;left:50%;top:50%;width:7px;height:7px;border:1px solid #eee;border-radius:50%;transform:translate(-50%,-50%)}#hint{position:absolute;top:calc(50% + 18px);left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:.15em;white-space:nowrap}#msg{position:absolute;bottom:22%;left:7%;right:7%;text-align:center;line-height:1.6;font-size:14px;opacity:0;transition:opacity .3s;background:#080b10aa;padding:12px}#msg.on{opacity:1}#controls{position:absolute;bottom:calc(15px + env(safe-area-inset-bottom));left:14px;right:14px;display:flex;justify-content:space-between;align-items:end}#joy{width:116px;height:116px;border:1px solid #ffffff40;background:#ffffff0a;border-radius:50%;position:relative;pointer-events:auto}#knob{position:absolute;width:42px;height:42px;left:36px;top:36px;border-radius:50%;background:#dce6f022;border:1px solid #ffffff70}button{pointer-events:auto;color:#fff;background:#101721d9;border:1px solid #ffffff50;padding:15px 18px;letter-spacing:.12em;font-size:11px}#start,#note{position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse,#202a36f5,#05070bf7)}.card{width:min(100%,510px);padding:clamp(22px,5vw,38px);border:1px solid #ffffff25;background:#05080dcc;box-shadow:0 20px 70px #0009}h1{font-size:clamp(30px,8vw,48px);line-height:1.03;letter-spacing:.07em;font-weight:500;margin:14px 0 20px}.eyebrow{font-size:10px;letter-spacing:.22em;color:#a9b8c9;text-transform:uppercase}.copy{font-size:14px;line-height:1.7;color:#c3ccd6}.rule{height:1px;background:#ffffff25;margin:20px 0}.primary{width:100%;margin-top:22px}.small{font-size:11px;line-height:1.6;color:#8e9aaa;margin-top:12px}#note{display:none;background:#03050bea}#noteText{font:20px/1.65 Georgia,serif;color:#e7e0d3;white-space:pre-line}@media(pointer:fine){#controls{display:none}#msg{bottom:12%}}
 </style></head><body>
@@ -13,10 +13,31 @@
 (()=>{const $=id=>document.getElementById(id);if(!window.THREE){$('objective').textContent='3D engine failed to load. Check internet and reload.';return}
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x101720);scene.fog=new THREE.FogExp2(0x101720,.035);
 const camera=new THREE.PerspectiveCamera(74,innerWidth/innerHeight,.1,80);camera.rotation.order='YXZ';
-const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;renderer.domElement.style.cssText='position:fixed;inset:0;z-index:0';document.body.prepend(renderer.domElement);
-const world=new THREE.Group();scene.add(world);scene.add(new THREE.HemisphereLight(0xc1d2e2,0x29221d,1.2));const moon=new THREE.DirectionalLight(0xc8d9f4,1.5);moon.position.set(-4,7,3);scene.add(moon);const lamp=new THREE.PointLight(0xffc887,22,12,2);lamp.position.set(2.5,2.4,-2.5);scene.add(lamp);
-const mat=(c,r=.9,m=0)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});const wall=mat(0x777a78),floor=mat(0x49413a),ceil=mat(0x34383c),trim=mat(0x24272a),wood=mat(0x4d3325),doorMat=mat(0x30251f),frame=mat(0x15191c),glass=mat(0x1c2c3d,.2,.15);
-function box(p,x,y,z,w,h,d,m,n=''){let o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.name=n;p.add(o);return o}
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.35));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.0;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.domElement.style.cssText='position:fixed;inset:0;z-index:0';document.body.prepend(renderer.domElement);
+const world=new THREE.Group();scene.add(world);scene.add(new THREE.HemisphereLight(0xc1d2e2,0x29221d,0.85));const moon=new THREE.DirectionalLight(0xc8d9f4,2.0);moon.position.set(-4,7,3);moon.castShadow=true;moon.shadow.mapSize.set(768,768);moon.shadow.camera.left=-8;moon.shadow.camera.right=8;moon.shadow.camera.top=8;moon.shadow.camera.bottom=-8;scene.add(moon);const lamp=new THREE.PointLight(0xffc887,25,12,2);lamp.position.set(2.5,2.4,-2.5);lamp.castShadow=true;lamp.shadow.mapSize.set(512,512);scene.add(lamp);
+
+const mat=(c,r=.9,m=0)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});
+// Procedural, locally generated textures: no extra image downloads needed.
+function makeTexture(kind, base, accent, count=1800) {
+  const c=document.createElement('canvas'); c.width=512; c.height=512;
+  const ctx=c.getContext('2d'); ctx.fillStyle=base; ctx.fillRect(0,0,512,512);
+  if(kind==='wood'){
+    for(let i=0;i<170;i++){const y=Math.random()*512;ctx.strokeStyle=Math.random()>.5?accent:'rgba(0,0,0,.15)';ctx.globalAlpha=.12+Math.random()*.18;ctx.lineWidth=.5+Math.random()*2;ctx.beginPath();ctx.moveTo(0,y);ctx.bezierCurveTo(130,y-7,300,y+8,512,y+(Math.random()-.5)*8);ctx.stroke();}
+    for(let y=0;y<512;y+=64){ctx.globalAlpha=.5;ctx.strokeStyle='#171514';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(512,y);ctx.stroke();ctx.globalAlpha=.5;ctx.strokeStyle='#b4a08b';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,y+3);ctx.lineTo(512,y+3);ctx.stroke();}
+  } else {
+    for(let i=0;i<count;i++){const x=Math.random()*512,y=Math.random()*512,a=Math.random()*.12;ctx.fillStyle=Math.random()>.5?`rgba(255,255,255,${a})`:`rgba(0,0,0,${a})`;ctx.fillRect(x,y,1+Math.random()*3,1+Math.random()*3);}
+    if(kind==='plaster'){ctx.globalAlpha=.12;for(let i=0;i<90;i++){ctx.strokeStyle=accent;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(Math.random()*512,Math.random()*512);ctx.lineTo(Math.random()*512,Math.random()*512);ctx.stroke();}}
+  }
+  const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=4;return t;
+}
+const woodTex=makeTexture('wood','#49372b','#c0a184');
+const plasterTex=makeTexture('plaster','#777a78','#d0c8b9');
+const floorTex=makeTexture('wood','#3d352f','#9b8065');floorTex.repeat.set(2,5);
+const wallTextured=new THREE.MeshStandardMaterial({color:0xffffff,map:plasterTex,roughness:1});
+const floorTextured=new THREE.MeshStandardMaterial({color:0xffffff,map:floorTex,roughness:.92});
+const woodTextured=new THREE.MeshStandardMaterial({color:0xffffff,map:woodTex,roughness:.82});
+const wall=wallTextured,floor=floorTextured,ceil=mat(0x34383c),trim=mat(0x24272a),wood=woodTextured,doorMat=mat(0x30251f),frame=mat(0x15191c),glass=mat(0x1c2c3d,.2,.15);
+function box(p,x,y,z,w,h,d,m,n=''){let o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.name=n;o.castShadow=true;o.receiveShadow=true;p.add(o);return o}
 const H=3.2,W=5.8;box(world,0,-.12,-4.5,W,.24,13,floor);box(world,0,H+.02,-4.5,W,.18,13,ceil);box(world,-W/2,H/2,-4.5,.18,H,13,wall);box(world,W/2,H/2,-4.5,.18,H,13,wall);box(world,0,H/2,-11,W,H,.18,wall);box(world,0,H/2,2,W,H,.18,wall);
 box(world,-1.95,H/2,-7.5,1.9,H,.16,wall);box(world,2,H/2,-7.5,1.8,H,.16,wall);box(world,0,2.7,-7.5,2.1,1,.16,wall);
 for(let z=-10.8;z<2;z+=2.7){box(world,-2.78,.13,z,.045,.22,1.8,trim);box(world,2.78,.13,z,.045,.22,1.8,trim)}
@@ -26,6 +47,25 @@ const idoor=new THREE.Group();idoor.position.set(0,0,-10.82);world.add(idoor);bo
 box(world,1.25,.9,-4.4,1.5,.12,.8,wood);for(let x of [.62,1.88])for(let z of [-4.7,-4.1])box(world,x,.43,z,.09,.85,.09,wood);
 const photoG=new THREE.Group();photoG.position.set(1.25,1.08,-4.4);photoG.rotation.x=-.16;world.add(photoG);box(photoG,0,0,0,.62,.72,.055,frame);box(photoG,0,0,.032,.5,.6,.018,mat(0xc1b9a7));for(let x of [-.11,.11])box(photoG,x,-.06,.046,.13,.28,.015,mat(0x384047));
 const drawG=new THREE.Group();drawG.position.set(-2.79,1.65,-6.1);drawG.rotation.y=Math.PI/2;world.add(drawG);box(drawG,0,0,0,.82,.92,.06,frame);box(drawG,0,0,.04,.72,.82,.02,mat(0xe4ddc9));const red=mat(0x9c5146);box(drawG,-.13,-.02,.058,.06,.26,.012,red);box(drawG,.13,-.02,.058,.06,.26,.012,red);box(drawG,0,-.04,.061,.23,.025,.012,red);box(world,-1.7,.65,-2.6,.55,1.3,.45,wood);box(world,-1.7,1.33,-2.6,.62,.08,.52,trim);
+// Added environmental detail pass: rug, sofa, lamp, skirting, and aged frames.
+const rugMat=mat(0x343b40,1),fabricMat=mat(0x45413d,1),brass=mat(0x8c7047,.38,.65),shadeMat=new THREE.MeshStandardMaterial({color:0xd4c4a5,roughness:.95,emissive:0x2b2113});
+box(world,.05,.012,-4.9,2.35,.025,1.65,rugMat,'worn rug');
+for(let x=-1.05;x<=1.05;x+=.18)box(world,x,.028,-5.68,.012,.008,.12,mat(0x8d8170));
+ // Sofa against the wall, with individual cushions and wooden feet.
+box(world,-1.75,.48,-5.25,1.25,.52,.58,fabricMat,'sofa base');
+box(world,-1.75,.91,-5.53,1.35,.55,.2,fabricMat,'sofa back');
+for(const x of [-2.18,-1.75,-1.32])box(world,x,.72,-5.25,.38,.14,.48,mat(0x514b45),'sofa cushion');
+for(const x of [-2.23,-1.27])for(const z of [-5.47,-5.02])box(world,x,.16,z,.07,.28,.07,wood,'sofa foot');
+ // A floor lamp creates a warm pool of light and a readable silhouette.
+box(world,2.25,.08,-3.05,.25,.12,.25,brass,'lamp base');
+box(world,2.25,1.05,-3.05,.045,1.9,.045,brass,'lamp stem');
+const shade=new THREE.Mesh(new THREE.CylinderGeometry(.24,.38,.42,16,1,true),shadeMat);shade.position.set(2.25,2.02,-3.05);shade.castShadow=true;world.add(shade);
+const warmPool=new THREE.PointLight(0xffd4a0,12,7,2);warmPool.position.set(2.25,1.9,-3.05);world.add(warmPool);
+ // Fine trim along the ceiling and a second picture frame add architectural scale.
+box(world,0,3.03,-4.5,5.55,.08,.08,trim,'ceiling trim');
+box(world,2.78,1.7,-5.9,.06,.7,.58,frame,'second frame');
+box(world,2.74,1.7,-5.9,.025,.58,.46,mat(0x7b7467),'old print');
+
 const dustGeo=new THREE.BufferGeometry(),dp=[];for(let i=0;i<140;i++)dp.push((Math.random()-.5)*5.2,Math.random()*2.8,-Math.random()*12);dustGeo.setAttribute('position',new THREE.Float32BufferAttribute(dp,3));const dust=new THREE.Points(dustGeo,new THREE.PointsMaterial({color:0xd8d6c9,size:.018,transparent:true,opacity:.5}));world.add(dust);
 const player={x:0,y:1.62,z:.6,yaw:0,pitch:0};camera.position.set(0,player.y,.6);let started=false,photoSeen=false,drawingSeen=false,doorOpen=false,noteOpen=false,glitch=0,elapsed=0,last=performance.now(),mx=0,my=0,joyId=null,dragId=null,lastX=0,lastY=0,keys={};
 function say(t,ms=4000){$('msg').textContent=t;$('msg').classList.add('on');clearTimeout(say.timer);say.timer=setTimeout(()=>$('msg').classList.remove('on'),ms)}
